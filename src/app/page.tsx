@@ -6,6 +6,8 @@ import TextArea from "@/components/inputs/TextArea"
 import { ChangeEvent, useState } from "react";
 import SpeechRecognitionComponent from "@/components/speechRecognition/SpeechRecognitionComponent"
 import { IconVolume } from "@tabler/icons-react";
+import FileUpload from "@/components/inputs/FileUpload"
+import {rtfToText} from "@/utils/rtfToText"
 
 export default function Home() {
 
@@ -15,6 +17,19 @@ export default function Home() {
 
     const utterance = new SpeechSynthesisUtterance(text)
     window.speechSynthesis.speak(utterance)
+  }
+
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const rtfContent = reader.result as string
+        const text = rtfToText(rtfContent)
+        setSourceText(text)
+      }
+      reader.readAsText(file)
+    }
   }
 
   return (
@@ -36,6 +51,10 @@ export default function Home() {
                         <SpeechRecognitionComponent setSourceText={setSourceText} />
                         <IconVolume size={22} className='text-gray-400' onClick={() => handlePlayback(sourceText)} />
                         {/* {File upload component} */}
+                        <FileUpload handleFileUpload={handleFileUpload} />
+                      </span>
+                      <span className="text-sm pr-4">
+                        {sourceText.length} / 2000
                       </span>
                     </div>
                   </div>
