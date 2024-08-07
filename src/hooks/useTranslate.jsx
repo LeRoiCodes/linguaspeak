@@ -3,18 +3,18 @@ import {OpenAI} from 'openai'
 
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_KEY,
+    apiKey: process.env.NEXT_PUBLIC_API_KEY,
     dangerouslyAllowBrowser:true
 })
 
-const useTranslate = ({sourceText, selectedLanguage}) => {
+const useTranslate = (sourceText, selectedLanguage) => {
 
     const [targetText, setTargetText] = useState("")
     useEffect(() => {
        const handleTranslate = async(sourceText) => {
         try {
             const response = await openai.chat.completions.create({
-                model:"gpt-4",
+                model:"gpt-3.5-turbo",
                 messages: [{role: "user", content: `You will be provided with a sentence. This sentence: ${sourceText}.
                 Your task are to:
                 - detect what language the sentence is in
